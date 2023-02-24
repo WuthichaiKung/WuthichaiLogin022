@@ -2,19 +2,26 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:modernlogintute/components/my_button.dart';
 import 'package:modernlogintute/components/my_textfield.dart';
-import 'package:modernlogintute/pages/reginster.dart';
+import 'package:modernlogintute/pages/login_page.dart';
 
-class LoginPage extends StatelessWidget {
-  LoginPage({super.key});
+String error = ("Passwurds don t match!");
+
+class SignUpPage extends StatelessWidget {
+  SignUpPage({super.key});
 
   // text editing controllers
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
+  final confirmpasswordController = TextEditingController();
 
   // sign user in method
-  void signUserIn() async {
-    await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: emailController.text, password: passwordController.text);
+  void _signUserUp() async {
+    if (passwordController.text == confirmpasswordController.text) {
+      await FirebaseAuth.instance.createUserWithEmailAndPassword(
+          email: emailController.text, password: passwordController.text);
+    } else {
+      [error];
+    }
   }
 
   @override
@@ -36,12 +43,12 @@ class LoginPage extends StatelessWidget {
 
               const SizedBox(height: 50),
 
-              // Login
+              //Sign Up
               Text(
-                'Login',
+                'Sign Up',
                 style: TextStyle(
                   color: Colors.grey[700],
-                  fontSize: 25,
+                  fontSize: 16,
                 ),
               ),
 
@@ -63,13 +70,22 @@ class LoginPage extends StatelessWidget {
                 obscureText: true,
               ),
 
-              const SizedBox(height: 15),
+              const SizedBox(height: 10),
+
+              // password textfield
+              MyTextField(
+                controller: confirmpasswordController,
+                hintText: 'ConfirmPassword',
+                obscureText: true,
+              ),
+
+              const SizedBox(height: 10),
 
               // forgot password?
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 25.0),
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     Text(
                       'Forgot Password?',
@@ -79,31 +95,31 @@ class LoginPage extends StatelessWidget {
                 ),
               ),
 
-              const SizedBox(height: 20),
+              const SizedBox(height: 25),
 
-              // sign up button
+              // sign in button
               MyButton(
-                onTap: signUserIn,
+                onTap: _signUserUp,
                 builder: (builder) {},
               ),
 
               const SizedBox(height: 10),
 
-              // Sign Up?
+              // Login?
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 25.0),
                 child: TextButton(
-                  child: const Text('Sign Up'),
+                  child: const Text('Login'),
                   onPressed: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => SignUpPage()),
+                      MaterialPageRoute(builder: (context) => LoginPage()),
                     );
                   },
                 ),
               ),
 
-              const SizedBox(height: 10),
+              const SizedBox(height: 50),
             ],
           ),
         ),
